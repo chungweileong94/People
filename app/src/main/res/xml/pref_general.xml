@@ -1,0 +1,16 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <PreferenceCategory
+        android:key="pref_key_sms_settings"
+        android:title="@string/pref_category_title_sms">
+
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="pref_sms_mode"
+            android:title="@string/pref_title_quick_message"
+            tools:summary="@string/pref_summary_quick_message_on" />
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

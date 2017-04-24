@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.lcw.people.EditContactActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:animateLayoutChanges="true"
+        android:descendantFocusability="beforeDescendants"
+        android:focusableInTouchMode="true"
+        android:orientation="vertical">
+
+        <!--Profile Image-->
+        <RelativeLayout
+            android:id="@+id/profileImagePanel"
+            android:layout_width="match_parent"
+            android:layout_height="220dp">
+
+            <ImageView
+                android:id="@+id/profileImageView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop"
+                android:src="@drawable/person_large" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="-100dp"
+                android:background="#60000000" />
+
+            <android.support.v7.widget.AppCompatImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentEnd="true"
+                android:layout_gravity="center_vertical"
+                android:layout_margin="16dp"
+                android:layout_weight="10"
+                app:srcCompat="@drawable/ic_add_a_photo_white_24dp" />
+
+            <LinearLayout
+                android:id="@+id/profileImageClick"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/list_background"
+                android:orientation="horizontal"></LinearLayout>
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:animateLayoutChanges="true"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <!--Name-->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/data_entry_row_margin_bottom"
+                android:orientation="horizontal"
+                android:weightSum="100">
+
+                <android.support.v7.widget.AppCompatImageView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="20"
+                    app:srcCompat="@drawable/ic_person_accent_24dp" />
+
+                <android.support.design.widget.TextInputLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="80">
+
+                    <EditText
+                        android:id="@+id/nameEditText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/name"
+                        android:inputType="textPersonName" />
+                </android.support.design.widget.TextInputLayout>
+            </LinearLayout>
+
+            <!--Phone-->
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/phoneRecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <!--Email-->
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/emailRecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <!--Address-->
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/addressRecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <!--Birthday-->
+            <LinearLayout
+                android:id="@+id/birthdayLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/data_entry_row_margin_bottom"
+                android:orientation="horizontal"
+                android:visibility="gone"
+                android:weightSum="100"
+                tools:visibility="visible">
+
+                <android.support.v7.widget.AppCompatImageView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="20"
+                    app:srcCompat="@drawable/ic_cake_accent_24dp" />
+
+                <TextView
+                    android:id="@+id/birthdayTextView"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="60"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                    tools:text="2017-3-21" />
+
+                <android.support.design.widget.FloatingActionButton
+                    android:id="@+id/removeBirthdayButton"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginBottom="16dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_weight="20"
+                    android:clickable="true"
+                    app:backgroundTint="@color/remove_red"
+                    app:fabSize="mini"
+                    app:srcCompat="@drawable/ic_delete_forever_white_24dp" />
+            </LinearLayout>
+
+            <!--Add More Button-->
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/addMoreButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="@dimen/data_entry_row_margin_bottom"
+                android:clickable="true"
+                app:srcCompat="@drawable/ic_add_24dp" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+</android.support.v4.widget.NestedScrollView>

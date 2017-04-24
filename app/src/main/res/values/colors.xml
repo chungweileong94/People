@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#009688</color>
+    <color name="colorPrimaryDark">#00796b</color>
+    <color name="colorAccent">#009688</color>
+    <color name="list_highlight">#60C6C6C6</color>
+    <color name="image_select_highlight">#FFFFFFFF</color>
+    <color name="details_card_primary_text_color">#FF000000</color>
+    <color name="remove_red">#FFFF4000</color>
+</resources>
