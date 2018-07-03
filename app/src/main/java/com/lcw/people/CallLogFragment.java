@@ -25,6 +25,7 @@ import com.lcw.people.Adapters.CallLogCursorAdapter;
 import com.lcw.people.Helpers.PermissionRequestCode;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 
 public class CallLogFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
@@ -64,11 +65,11 @@ public class CallLogFragment extends Fragment implements LoaderManager.LoaderCal
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_call_log, container, false);
 
-        logRecyclerView = (RecyclerView) view.findViewById(R.id.logRecyclerView);
+        logRecyclerView = view.findViewById(R.id.logRecyclerView);
         logLayoutManager = new LinearLayoutManager(getContext());
         logRecyclerView.setLayoutManager(logLayoutManager);
 
-        emptyPanel = (LinearLayout) view.findViewById(R.id.emptyPanel);
+        emptyPanel = view.findViewById(R.id.emptyPanel);
         return view;
     }
 
@@ -80,7 +81,7 @@ public class CallLogFragment extends Fragment implements LoaderManager.LoaderCal
         bundle.putString("lookup_key", lookup_key);
 
         getLoaderManager().initLoader(PHONE_LOADER_ID, bundle, this);
-        getLoaderManager().getLoader(PHONE_LOADER_ID).onContentChanged();
+        Objects.requireNonNull(getLoaderManager().getLoader(PHONE_LOADER_ID)).onContentChanged();
     }
 
     @Override
@@ -97,7 +98,7 @@ public class CallLogFragment extends Fragment implements LoaderManager.LoaderCal
 
     private void readLog(Bundle bundle) {
         getLoaderManager().initLoader(LOG_LOADER_ID, bundle, this);
-        getLoaderManager().getLoader(LOG_LOADER_ID).onContentChanged();
+        Objects.requireNonNull(getLoaderManager().getLoader(LOG_LOADER_ID)).onContentChanged();
     }
 
     @Override

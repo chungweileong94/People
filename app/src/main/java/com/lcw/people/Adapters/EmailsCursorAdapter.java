@@ -58,18 +58,15 @@ public class EmailsCursorAdapter extends RecyclerView.Adapter<EmailsCursorAdapte
 
         public ViewHolder(View itemView) {
             super(itemView);
-            emailTextView = (TextView) itemView.findViewById(R.id.emailTextView);
-            typeTextView = (TextView) itemView.findViewById(R.id.typeTextView);
+            emailTextView = itemView.findViewById(R.id.emailTextView);
+            typeTextView = itemView.findViewById(R.id.typeTextView);
 
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(Intent.ACTION_SEND);
-                    intent.putExtra(Intent.EXTRA_EMAIL, new String[]{email});
-                    intent.setType("message/rfc822"); //for email type
-                    v.getContext().startActivity(
-                            Intent.createChooser(intent, "Choose an Email client :"));
-                }
+            itemView.setOnClickListener(v -> {
+                Intent intent = new Intent(Intent.ACTION_SEND);
+                intent.putExtra(Intent.EXTRA_EMAIL, new String[]{email});
+                intent.setType("message/rfc822"); //for email type
+                v.getContext().startActivity(
+                        Intent.createChooser(intent, "Choose an Email client :"));
             });
 
             itemView.setOnCreateContextMenuListener(this);

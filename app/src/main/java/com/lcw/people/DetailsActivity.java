@@ -63,7 +63,7 @@ public class DetailsActivity extends AppCompatActivity implements LoaderManager.
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_details);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         favoritesSQLiteHelper = new FavoritesSQLiteHelper(this);
@@ -71,32 +71,29 @@ public class DetailsActivity extends AppCompatActivity implements LoaderManager.
         lookup_key = getIntent().getStringExtra("lookup_key");
         contact_id = getIntent().getStringExtra("contact_id");
 
-        toolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.toolbar_layout);
-        profileImageView = (ImageView) findViewById(R.id.profileImageView);
+        toolbarLayout = findViewById(R.id.toolbar_layout);
+        profileImageView = findViewById(R.id.profileImageView);
 
         detailsPageAdapter = new DetailsPageAdapter(getSupportFragmentManager(), lookup_key);
 
-        viewPager = (ViewPager) findViewById(R.id.viewPager);
+        viewPager = findViewById(R.id.viewPager);
         viewPager.setAdapter(detailsPageAdapter);
 
-        tabs = (TabLayout) findViewById(R.id.tabs);
+        tabs = findViewById(R.id.tabs);
         tabs.setupWithViewPager(viewPager);
 
-        favoriteButton = (FloatingActionButton) findViewById(R.id.favoriteButton);
+        favoriteButton = findViewById(R.id.favoriteButton);
         favoriteButton.setImageResource(favoritesSQLiteHelper.isContactExist(lookup_key) ?
                 R.drawable.ic_star_white_24dp : R.drawable.ic_star_border_white_24dp);
-        favoriteButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (!favoritesSQLiteHelper.isContactExist(lookup_key)) {
-                    favoritesSQLiteHelper.addContact(lookup_key);
-                    favoriteButton.setImageResource(R.drawable.ic_star_white_24dp);
-                    Snackbar.make(v, R.string.add_favorites, Snackbar.LENGTH_LONG).show();
-                } else {
-                    favoritesSQLiteHelper.removeContact(lookup_key);
-                    favoriteButton.setImageResource(R.drawable.ic_star_border_white_24dp);
-                    Snackbar.make(v, R.string.remove_favorites, Snackbar.LENGTH_LONG).show();
-                }
+        favoriteButton.setOnClickListener(v -> {
+            if (!favoritesSQLiteHelper.isContactExist(lookup_key)) {
+                favoritesSQLiteHelper.addContact(lookup_key);
+                favoriteButton.setImageResource(R.drawable.ic_star_white_24dp);
+                Snackbar.make(v, R.string.add_favorites, Snackbar.LENGTH_LONG).show();
+            } else {
+                favoritesSQLiteHelper.removeContact(lookup_key);
+                favoriteButton.setImageResource(R.drawable.ic_star_border_white_24dp);
+                Snackbar.make(v, R.string.remove_favorites, Snackbar.LENGTH_LONG).show();
             }
         });
 
@@ -322,9 +319,9 @@ public class DetailsActivity extends AppCompatActivity implements LoaderManager.
         public Fragment getItem(int position) {
             switch (position) {
                 case 0:
-                    return new DetailsFragment().newInstance(lookup_key);
+                    return DetailsFragment.newInstance(lookup_key);
                 case 1:
-                    return new CallLogFragment().newInstance(lookup_key);
+                    return CallLogFragment.newInstance(lookup_key);
                 default:
                     return null;
             }

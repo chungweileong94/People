@@ -1,7 +1,6 @@
 package com.lcw.people.Adapters;
 
 import android.content.Context;
-import android.support.annotation.BoolRes;
 import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
@@ -55,9 +54,9 @@ public class PhoneDataEntriesAdapter extends RecyclerView.Adapter<PhoneDataEntri
         public ViewHolder(View itemView) {
             super(itemView);
 
-            iconImageView = (AppCompatImageView) itemView.findViewById(R.id.iconImageView);
-            phoneEditText = (EditText) itemView.findViewById(R.id.phoneEditText);
-            phoneTypeSpinner = (Spinner) itemView.findViewById(R.id.phoneTypeSpinner);
+            iconImageView = itemView.findViewById(R.id.iconImageView);
+            phoneEditText = itemView.findViewById(R.id.phoneEditText);
+            phoneTypeSpinner = itemView.findViewById(R.id.phoneTypeSpinner);
 
             phoneEditText.addTextChangedListener(new TextWatcher() {
                 @Override

@@ -14,7 +14,6 @@ import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SearchView;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -28,6 +27,7 @@ import com.lcw.people.Helpers.FavoritesSQLiteHelper;
 import com.lcw.people.Helpers.PermissionRequestCode;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 
 public class FavoritesFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
@@ -42,8 +42,7 @@ public class FavoritesFragment extends Fragment implements LoaderManager.LoaderC
     }
 
     public static FavoritesFragment newInstance() {
-        FavoritesFragment fragment = new FavoritesFragment();
-        return fragment;
+        return new FavoritesFragment();
     }
 
     @Override
@@ -55,7 +54,7 @@ public class FavoritesFragment extends Fragment implements LoaderManager.LoaderC
     @Override
     public void onResume() {
         super.onResume();
-        if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
+        if (ContextCompat.checkSelfPermission(Objects.requireNonNull(getContext()), Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
             this.requestPermissions(new String[]{Manifest.permission.READ_CONTACTS},
                     PermissionRequestCode.READ_CONTACTS.getValue());
         } else {
@@ -64,16 +63,16 @@ public class FavoritesFragment extends Fragment implements LoaderManager.LoaderC
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_favorites, container, false);
 
-        favoritesRecyclerView = (RecyclerView) view.findViewById(R.id.favoritesRecyclerView);
+        favoritesRecyclerView = view.findViewById(R.id.favoritesRecyclerView);
 
         favoritesLayoutManager = new LinearLayoutManager(getActivity());
         favoritesRecyclerView.setLayoutManager(favoritesLayoutManager);
 
-        emptyPanel = (LinearLayout) view.findViewById(R.id.emptyPanel);
+        emptyPanel = view.findViewById(R.id.emptyPanel);
         return view;
     }
 
@@ -89,7 +88,7 @@ public class FavoritesFragment extends Fragment implements LoaderManager.LoaderC
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
+        if (ContextCompat.checkSelfPermission(Objects.requireNonNull(getContext()), Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
             this.requestPermissions(new String[]{Manifest.permission.READ_CONTACTS},
                     PermissionRequestCode.READ_CONTACTS.getValue());
         } else {
@@ -108,16 +107,17 @@ public class FavoritesFragment extends Fragment implements LoaderManager.LoaderC
 
     private void loadContacts() {
         getLoaderManager().initLoader(0, null, this);
-        getLoaderManager().getLoader(0).onContentChanged();
+        Objects.requireNonNull(getLoaderManager().getLoader(0)).onContentChanged();
     }
 
     // LoaderManager.LoaderCallbacks<Cursor> Methods
+    @NonNull
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         ArrayList<String> lookup_keys = new FavoritesSQLiteHelper(getContext()).getAllContacts();
 
-        String selection = null;
-        String[] selectionArgs = null;
+        String selection;
+        String[] selectionArgs;
 
         if (lookup_keys.size() > 0) {
             StringBuilder selectionBuilder = new StringBuilder(ContactsContract.Contacts.LOOKUP_KEY + " in (");
@@ -132,7 +132,7 @@ public class FavoritesFragment extends Fragment implements LoaderManager.LoaderC
             selectionArgs = new String[]{"no_such_key"};
         }
 
-        return new CursorLoader(getContext(),
+        return new CursorLoader(Objects.requireNonNull(getContext()),
                 ContactsContract.Contacts.CONTENT_URI,
                 null,
                 selection,
@@ -141,7 +141,7 @@ public class FavoritesFragment extends Fragment implements LoaderManager.LoaderC
     }
 
     @Override
-    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+    public void onLoadFinished(@NonNull Loader<Cursor> loader, Cursor data) {
         favoritesRecyclerView.setAdapter(new ContactsCursorAdapter(getContext(), data));
 
         if (data.getCount() <= 0) {
@@ -152,7 +152,7 @@ public class FavoritesFragment extends Fragment implements LoaderManager.LoaderC
     }
 
     @Override
-    public void onLoaderReset(Loader<Cursor> loader) {
+    public void onLoaderReset(@NonNull Loader<Cursor> loader) {
 
     }
 }

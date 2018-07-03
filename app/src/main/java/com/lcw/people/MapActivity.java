@@ -45,19 +45,16 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         setContentView(R.layout.activity_map);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        addFab = (FloatingActionButton) findViewById(R.id.addButton);
-        addFab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (location != null) {
-                    Intent intent = new Intent(android.content.Intent.ACTION_VIEW,
-                            Uri.parse("google.navigation:q=" + location.latitude + "," + location.longitude));
-                    v.getContext().startActivity(intent);
-                }
+        addFab = findViewById(R.id.addButton);
+        addFab.setOnClickListener(v -> {
+            if (location != null) {
+                Intent intent = new Intent(Intent.ACTION_VIEW,
+                        Uri.parse("google.navigation:q=" + location.latitude + "," + location.longitude));
+                v.getContext().startActivity(intent);
             }
         });
 
-        progressBar = (ProgressBar) findViewById(R.id.progressBar);
+        progressBar = findViewById(R.id.progressBar);
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()

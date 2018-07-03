@@ -53,13 +53,13 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_contacts, container, false);
 
-        contactsRecyclerView = (RecyclerView) view.findViewById(R.id.contactsRecyclerView);
+        contactsRecyclerView = view.findViewById(R.id.contactsRecyclerView);
         contactsRecyclerView.setHasFixedSize(true);
 
         contactsLayoutManager = new LinearLayoutManager(getActivity());
         contactsRecyclerView.setLayoutManager(contactsLayoutManager);
 
-        emptyPanel = (LinearLayout) view.findViewById(R.id.emptyPanel);
+        emptyPanel = view.findViewById(R.id.emptyPanel);
         return view;
     }
 

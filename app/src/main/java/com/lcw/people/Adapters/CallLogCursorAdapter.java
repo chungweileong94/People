@@ -95,22 +95,19 @@ public class CallLogCursorAdapter extends RecyclerView.Adapter<CallLogCursorAdap
         public ViewHolder(View itemView) {
             super(itemView);
 
-            phoneTextView = (TextView) itemView.findViewById(R.id.phoneTextView);
-            datetimeTextView = (TextView) itemView.findViewById(R.id.datetimeTextView);
-            typeImageView = (AppCompatImageView) itemView.findViewById(R.id.typeImageView);
+            phoneTextView = itemView.findViewById(R.id.phoneTextView);
+            datetimeTextView = itemView.findViewById(R.id.datetimeTextView);
+            typeImageView = itemView.findViewById(R.id.typeImageView);
 
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (ActivityCompat.checkSelfPermission(v.getContext(), Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
-                        ActivityCompat.requestPermissions((Activity) v.getContext(),
-                                new String[]{Manifest.permission.CALL_PHONE},
-                                PermissionRequestCode.CALL_PHONE.getValue());
-                    } else {
-                        Intent callIntent = new Intent(Intent.ACTION_CALL);
-                        callIntent.setData(Uri.parse("tel:" + phoneNumber));
-                        v.getContext().startActivity(callIntent);
-                    }
+            itemView.setOnClickListener(v -> {
+                if (ActivityCompat.checkSelfPermission(v.getContext(), Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+                    ActivityCompat.requestPermissions((Activity) v.getContext(),
+                            new String[]{Manifest.permission.CALL_PHONE},
+                            PermissionRequestCode.CALL_PHONE.getValue());
+                } else {
+                    Intent callIntent = new Intent(Intent.ACTION_CALL);
+                    callIntent.setData(Uri.parse("tel:" + phoneNumber));
+                    v.getContext().startActivity(callIntent);
                 }
             });
         }

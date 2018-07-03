@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.provider.ContactsContract;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
@@ -18,6 +19,8 @@ import android.widget.Toast;
 import com.lcw.people.MapActivity;
 import com.lcw.people.R;
 
+import java.util.Objects;
+
 
 public class AddressCursorAdapter extends RecyclerView.Adapter<AddressCursorAdapter.ViewHolder> {
 
@@ -29,14 +32,15 @@ public class AddressCursorAdapter extends RecyclerView.Adapter<AddressCursorAdap
         this.cursor = cursor;
     }
 
+    @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         return new ViewHolder(LayoutInflater.from(context)
                 .inflate(R.layout.address_item_view, parent, false));
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         cursor.moveToPosition(position);
 
         String address = cursor.getString(
@@ -62,18 +66,15 @@ public class AddressCursorAdapter extends RecyclerView.Adapter<AddressCursorAdap
 
         public ViewHolder(View itemView) {
             super(itemView);
-            addressTextView = (TextView) itemView.findViewById(R.id.addressTextView);
-            typeTextView = (TextView) itemView.findViewById(R.id.typeTextView);
+            addressTextView = itemView.findViewById(R.id.addressTextView);
+            typeTextView = itemView.findViewById(R.id.typeTextView);
 
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    //map
-                    Intent intent = new Intent(v.getContext(), MapActivity.class);
-                    intent.putExtra("address", address);
+            itemView.setOnClickListener(v -> {
+                //map
+                Intent intent = new Intent(v.getContext(), MapActivity.class);
+                intent.putExtra("address", address);
 
-                    v.getContext().startActivity(intent);
-                }
+                v.getContext().startActivity(intent);
             });
 
             itemView.setOnCreateContextMenuListener(this);
@@ -92,7 +93,7 @@ public class AddressCursorAdapter extends RecyclerView.Adapter<AddressCursorAdap
         public boolean onMenuItemClick(MenuItem item) {
             if (item.getItemId() == R.id.action_copy) {
                 ClipboardManager clipboardManager = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
-                clipboardManager.setPrimaryClip(ClipData.newPlainText(address, address));
+                Objects.requireNonNull(clipboardManager).setPrimaryClip(ClipData.newPlainText(address, address));
                 Toast.makeText(context, R.string.copied, Toast.LENGTH_SHORT).show();
                 return true;
             }

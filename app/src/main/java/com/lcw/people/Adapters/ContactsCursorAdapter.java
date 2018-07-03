@@ -6,7 +6,6 @@ import android.content.ContentProviderOperation;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.OperationApplicationException;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -18,12 +17,10 @@ import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
-import android.os.RemoteException;
 import android.provider.ContactsContract;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.view.ContextMenu;
@@ -31,14 +28,11 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.lcw.people.CustomViews.CircleImageView;
 import com.lcw.people.DetailsActivity;
-import com.lcw.people.Helpers.FavoritesSQLiteHelper;
 import com.lcw.people.Helpers.PermissionRequestCode;
 import com.lcw.people.R;
 import com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView;
@@ -112,18 +106,15 @@ public class ContactsCursorAdapter extends RecyclerView.Adapter<ContactsCursorAd
 
         public ViewHolder(View itemView) {
             super(itemView);
-            nameTextView = (TextView) itemView.findViewById(R.id.nameTextView);
-            profileImageView = (CircleImageView) itemView.findViewById(R.id.profileImageView);
+            nameTextView = itemView.findViewById(R.id.nameTextView);
+            profileImageView = itemView.findViewById(R.id.profileImageView);
 
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (lookup_key != null) {
-                        Intent intent = new Intent(v.getContext(), DetailsActivity.class);
-                        intent.putExtra("lookup_key", lookup_key);
-                        intent.putExtra("contact_id", contact_id);
-                        v.getContext().startActivity(intent);
-                    }
+            itemView.setOnClickListener(v -> {
+                if (lookup_key != null) {
+                    Intent intent = new Intent(v.getContext(), DetailsActivity.class);
+                    intent.putExtra("lookup_key", lookup_key);
+                    intent.putExtra("contact_id", contact_id);
+                    v.getContext().startActivity(intent);
                 }
             });
 

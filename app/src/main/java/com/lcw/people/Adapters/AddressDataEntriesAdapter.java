@@ -6,11 +6,8 @@ import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.support.annotation.BoolRes;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
@@ -28,7 +25,6 @@ import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlacePicker;
-import com.lcw.people.AddContactActivity;
 import com.lcw.people.Helpers.DataEntry;
 import com.lcw.people.Helpers.PermissionRequestCode;
 import com.lcw.people.R;
@@ -99,9 +95,9 @@ public class AddressDataEntriesAdapter extends RecyclerView.Adapter<AddressDataE
         public ViewHolder(View itemView) {
             super(itemView);
 
-            iconImageView = (AppCompatImageView) itemView.findViewById(R.id.iconImageView);
-            addressEditText = (EditText) itemView.findViewById(R.id.addressEditText);
-            addressTypeSpinner = (Spinner) itemView.findViewById(R.id.addressTypeSpinner);
+            iconImageView = itemView.findViewById(R.id.iconImageView);
+            addressEditText = itemView.findViewById(R.id.addressEditText);
+            addressTypeSpinner = itemView.findViewById(R.id.addressTypeSpinner);
 
             addressEditText.addTextChangedListener(new TextWatcher() {
                 @Override
@@ -153,7 +149,7 @@ public class AddressDataEntriesAdapter extends RecyclerView.Adapter<AddressDataE
                 }
             });
 
-            pickButton = (Button) itemView.findViewById(R.id.pickButton);
+            pickButton = itemView.findViewById(R.id.pickButton);
             pickButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -168,9 +164,7 @@ public class AddressDataEntriesAdapter extends RecyclerView.Adapter<AddressDataE
                             itemPosition = getAdapterPosition();
                             getActivity(v.getContext()).startActivityForResult(
                                     builder.build(getActivity(v.getContext())), PLACE_PICKER_REQUEST);
-                        } catch (GooglePlayServicesRepairableException e) {
-                            e.printStackTrace();
-                        } catch (GooglePlayServicesNotAvailableException e) {
+                        } catch (GooglePlayServicesRepairableException | GooglePlayServicesNotAvailableException e) {
                             e.printStackTrace();
                         }
                     }

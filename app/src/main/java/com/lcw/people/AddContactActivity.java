@@ -53,6 +53,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Objects;
 
 public class AddContactActivity extends AppCompatActivity {
 
@@ -98,7 +99,7 @@ public class AddContactActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         //phone section setup
-        phoneRecyclerView = (RecyclerView) findViewById(R.id.phoneRecyclerView);
+        phoneRecyclerView = findViewById(R.id.phoneRecyclerView);
         phoneLayoutManager = new LinearLayoutManager(this);
         phoneRecyclerView.setLayoutManager(phoneLayoutManager);
         phoneDataEntries = new ArrayList<>();
@@ -107,7 +108,7 @@ public class AddContactActivity extends AppCompatActivity {
         phoneRecyclerView.setAdapter(phoneAdapter);
 
         //email section setup
-        emailRecyclerView = (RecyclerView) findViewById(R.id.emailRecyclerView);
+        emailRecyclerView = findViewById(R.id.emailRecyclerView);
         emailLayoutManager = new LinearLayoutManager(this);
         emailRecyclerView.setLayoutManager(emailLayoutManager);
         emailDataEntries = new ArrayList<>();
@@ -116,7 +117,7 @@ public class AddContactActivity extends AppCompatActivity {
         emailRecyclerView.setAdapter(emailAdapter);
 
         //address section setup
-        addressRecyclerView = (RecyclerView) findViewById(R.id.addressRecyclerView);
+        addressRecyclerView = findViewById(R.id.addressRecyclerView);
         addressLayoutManager = new LinearLayoutManager(this);
         addressRecyclerView.setLayoutManager(addressLayoutManager);
         addressDataEntries = new ArrayList<>();
@@ -125,14 +126,14 @@ public class AddContactActivity extends AppCompatActivity {
         addressRecyclerView.setAdapter(addressAdapter);
 
         //general section setup
-        profileImageView = (ImageView) findViewById(R.id.profileImageView);
+        profileImageView = findViewById(R.id.profileImageView);
 
         if (profileBitmap != null) {
             profileImageView.setImageBitmap(profileBitmap);
         }
-        nameEditText = (EditText) findViewById(R.id.nameEditText);
+        nameEditText = findViewById(R.id.nameEditText);
 
-        profileImageClick = (LinearLayout) findViewById(R.id.profileImageClick);
+        profileImageClick = findViewById(R.id.profileImageClick);
         profileImageClick.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View v) {
@@ -140,23 +141,20 @@ public class AddContactActivity extends AppCompatActivity {
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
                 builder.setTitle(R.string.add_photo);
-                builder.setItems(options, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        if (which == 0) {
-                            if (ActivityCompat.checkSelfPermission(v.getContext(), Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                                ActivityCompat.requestPermissions((Activity) v.getContext(), new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
-                                        PermissionRequestCode.READ_EXTERNAL_STORAGE.getValue());
-                            } else {
-                                pickPhoto();
-                            }
+                builder.setItems(options, (dialog, which) -> {
+                    if (which == 0) {
+                        if (ActivityCompat.checkSelfPermission(v.getContext(), Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                            ActivityCompat.requestPermissions((Activity) v.getContext(), new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                                    PermissionRequestCode.READ_EXTERNAL_STORAGE.getValue());
                         } else {
-                            if (ActivityCompat.checkSelfPermission(v.getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                                ActivityCompat.requestPermissions((Activity) v.getContext(), new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                                        PermissionRequestCode.WRITE_EXTERNAL_STORAGE.getValue());
-                            } else {
-                                takePhotoByCamera();
-                            }
+                            pickPhoto();
+                        }
+                    } else {
+                        if (ActivityCompat.checkSelfPermission(v.getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                            ActivityCompat.requestPermissions((Activity) v.getContext(), new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                                    PermissionRequestCode.WRITE_EXTERNAL_STORAGE.getValue());
+                        } else {
+                            takePhotoByCamera();
                         }
                     }
                 });
@@ -165,8 +163,8 @@ public class AddContactActivity extends AppCompatActivity {
         });
 
         //extra section setup
-        birthdayLayout = (LinearLayout) findViewById(R.id.birthdayLayout);
-        birthdayTextView = (TextView) findViewById(R.id.birthdayTextView);
+        birthdayLayout = findViewById(R.id.birthdayLayout);
+        birthdayTextView = findViewById(R.id.birthdayTextView);
         birthdayTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -178,7 +176,7 @@ public class AddContactActivity extends AppCompatActivity {
                 if (dateString.length() > 0) {
                     try {
                         calendar.setTime(dateFormat.parse(dateString));
-                    } catch (ParseException e) {
+                    } catch (ParseException ignored) {
                     }
                 }
 
@@ -186,37 +184,28 @@ public class AddContactActivity extends AppCompatActivity {
             }
         });
 
-        addMoreButton = (FloatingActionButton) findViewById(R.id.addMoreButton);
-        addMoreButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        addMoreButton = findViewById(R.id.addMoreButton);
+        addMoreButton.setOnClickListener(v -> {
 
-                //these lines of code need to modify if there are more options
-                if (birthday.equals("")) {
-                    final String[] options = {"Birthday"};
+            //these lines of code need to modify if there are more options
+            if (birthday.equals("")) {
+                final String[] options = {"Birthday"};
 
-                    AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
-                    builder.setTitle(R.string.add_more);
-                    builder.setItems(options, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, final int which) {
-                            if (options[which] == "Birthday") {
-                                openBirthdayDatePicker(Calendar.getInstance());
-                            }
-                        }
-                    });
-                    builder.create().show();
-                }
+                AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
+                builder.setTitle(R.string.add_more);
+                builder.setItems(options, (dialog, which) -> {
+                    if (options[which] == "Birthday") {
+                        openBirthdayDatePicker(Calendar.getInstance());
+                    }
+                });
+                builder.create().show();
             }
         });
 
-        removeBirthdayButton = (FloatingActionButton) findViewById(R.id.removeBirthdayButton);
-        removeBirthdayButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                birthday = "";
-                refreshExtraFieldUI();
-            }
+        removeBirthdayButton = findViewById(R.id.removeBirthdayButton);
+        removeBirthdayButton.setOnClickListener(v -> {
+            birthday = "";
+            refreshExtraFieldUI();
         });
     }
 
@@ -378,9 +367,7 @@ public class AddContactActivity extends AppCompatActivity {
                     } else {
                         Toast.makeText(this, R.string.contact_add_failed, Toast.LENGTH_LONG).show();
                     }
-                } catch (RemoteException e) {
-                    e.printStackTrace();
-                } catch (OperationApplicationException e) {
+                } catch (RemoteException | OperationApplicationException e) {
                     e.printStackTrace();
                 }
 
@@ -420,7 +407,7 @@ public class AddContactActivity extends AppCompatActivity {
                     if (uri != null) {
                         try {
                             profileBitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
-                            profileBitmap = rotateImage(profileBitmap, photoURI.getPath().toString());
+                            profileBitmap = rotateImage(profileBitmap, photoURI.getPath());
                             profileBitmap = cropSquareBitmap(profileBitmap);
                             profileImageView.setImageBitmap(profileBitmap);
                         } catch (IOException e) {
@@ -502,7 +489,7 @@ public class AddContactActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        int orientation = exifInterface.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_UNDEFINED);
+        int orientation = Objects.requireNonNull(exifInterface).getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_UNDEFINED);
         Matrix matrix = new Matrix();
 
         switch (orientation) {
@@ -525,7 +512,7 @@ public class AddContactActivity extends AppCompatActivity {
         try {
             String[] proj = {MediaStore.Images.Media.DATA};
             cursor = getContentResolver().query(contentUri, proj, null, null, null);
-            int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+            int column_index = Objects.requireNonNull(cursor).getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
             cursor.moveToFirst();
             return cursor.getString(column_index);
         } finally {
@@ -540,12 +527,9 @@ public class AddContactActivity extends AppCompatActivity {
                 month = initialDate.get(Calendar.MONTH),
                 day = initialDate.get(Calendar.DAY_OF_MONTH);
 
-        DatePickerDialog birthdayDialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
-            @Override
-            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                birthday = year + "-" + (month + 1) + "-" + dayOfMonth;
-                refreshExtraFieldUI();
-            }
+        DatePickerDialog birthdayDialog = new DatePickerDialog(this, (view, year1, month1, dayOfMonth) -> {
+            birthday = year1 + "-" + (month1 + 1) + "-" + dayOfMonth;
+            refreshExtraFieldUI();
         }, year, month, day);
 
         birthdayDialog.getDatePicker().setMaxDate(new Date().getTime());

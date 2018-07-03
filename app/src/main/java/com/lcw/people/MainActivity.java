@@ -23,6 +23,8 @@ import android.widget.Toast;
 
 import com.lcw.people.Helpers.PermissionRequestCode;
 
+import java.util.Objects;
+
 public class MainActivity extends AppCompatActivity {
 
     private SectionsPagerAdapter sectionsPagerAdapter;
@@ -35,15 +37,15 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         sectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
-        viewPager = (ViewPager) findViewById(R.id.viewPager);
+        viewPager = findViewById(R.id.viewPager);
         viewPager.setAdapter(sectionsPagerAdapter);
 
-        tabs = (TabLayout) findViewById(R.id.tabs);
+        tabs = findViewById(R.id.tabs);
         tabs.setupWithViewPager(viewPager);
 
         tabs.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
@@ -71,13 +73,13 @@ public class MainActivity extends AppCompatActivity {
         for (int i = 0; i < tabs.getTabCount(); i++) {
             switch (i) {
                 case 0:
-                    tabs.getTabAt(i).setIcon(
+                    Objects.requireNonNull(tabs.getTabAt(i)).setIcon(
                             tabs.getSelectedTabPosition() == i ?
                                     R.drawable.ic_people_white_24dp :
                                     R.drawable.ic_people_unselected_24dp);
                     break;
                 case 1:
-                    tabs.getTabAt(i).setIcon(
+                    Objects.requireNonNull(tabs.getTabAt(i)).setIcon(
                             tabs.getSelectedTabPosition() == i ?
                                     R.drawable.ic_star_white_24dp :
                                     R.drawable.ic_star_unselected_24dp);
@@ -87,18 +89,15 @@ public class MainActivity extends AppCompatActivity {
 
         setTitle(tabs.getSelectedTabPosition() == 0 ? R.string.contacts : R.string.favorites);
 
-        addButton = (FloatingActionButton) findViewById(R.id.addButton);
-        addButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (ActivityCompat.checkSelfPermission(v.getContext(), Manifest.permission.WRITE_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
-                    ActivityCompat.requestPermissions((Activity) v.getContext(),
-                            new String[]{Manifest.permission.WRITE_CONTACTS},
-                            PermissionRequestCode.WRITE_CONTACTS.getValue());
-                }
-                Intent intent = new Intent(getApplicationContext(), AddContactActivity.class);
-                startActivity(intent);
+        addButton = findViewById(R.id.addButton);
+        addButton.setOnClickListener((v) -> {
+            if (ActivityCompat.checkSelfPermission(v.getContext(), Manifest.permission.WRITE_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions((Activity) v.getContext(),
+                        new String[]{Manifest.permission.WRITE_CONTACTS},
+                        PermissionRequestCode.WRITE_CONTACTS.getValue());
             }
+            Intent intent = new Intent(getApplicationContext(), AddContactActivity.class);
+            startActivity(intent);
         });
     }
 

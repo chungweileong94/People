@@ -5,7 +5,6 @@ import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -55,9 +54,9 @@ public class EmailDataEntriesAdapter extends RecyclerView.Adapter<EmailDataEntri
         public ViewHolder(View itemView) {
             super(itemView);
 
-            iconImageView = (AppCompatImageView) itemView.findViewById(R.id.iconImageView);
-            emailEditText = (EditText) itemView.findViewById(R.id.emailEditText);
-            emailTypeSpinner = (Spinner) itemView.findViewById(R.id.emailTypeSpinner);
+            iconImageView = itemView.findViewById(R.id.iconImageView);
+            emailEditText = itemView.findViewById(R.id.emailEditText);
+            emailTypeSpinner = itemView.findViewById(R.id.emailTypeSpinner);
 
             emailEditText.addTextChangedListener(new TextWatcher() {
                 @Override

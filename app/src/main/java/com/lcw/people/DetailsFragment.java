@@ -17,6 +17,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.provider.ContactsContract;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
@@ -46,6 +47,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Objects;
 
 
 public class DetailsFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
@@ -92,38 +94,38 @@ public class DetailsFragment extends Fragment implements LoaderManager.LoaderCal
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_details, container, false);
 
         //phone
-        phone_messageCardView = (CardView) view.findViewById(R.id.phone_messageCardView);
-        phonesRecyclerView = (RecyclerView) view.findViewById(R.id.phonesRecyclerView);
+        phone_messageCardView = view.findViewById(R.id.phone_messageCardView);
+        phonesRecyclerView = view.findViewById(R.id.phonesRecyclerView);
         phonesLayoutManager = new LinearLayoutManager(getContext());
         phonesRecyclerView.setLayoutManager(phonesLayoutManager);
         phonesRecyclerView.addItemDecoration(
-                new RecyclerViewSeparatorDecoration(getContext(), Color.LTGRAY, .8f));
+                new RecyclerViewSeparatorDecoration(Objects.requireNonNull(getContext()), Color.LTGRAY, .8f));
 
         //message
-        messageButton = (LinearLayout) view.findViewById(R.id.messageButton);
+        messageButton = view.findViewById(R.id.messageButton);
 
         //email
-        emailCardView = (CardView) view.findViewById(R.id.emailCardView);
-        emailsRecyclerView = (RecyclerView) view.findViewById(R.id.emailsRecyclerView);
+        emailCardView = view.findViewById(R.id.emailCardView);
+        emailsRecyclerView = view.findViewById(R.id.emailsRecyclerView);
         emailsLayoutManager = new LinearLayoutManager(getContext());
         emailsRecyclerView.setLayoutManager(emailsLayoutManager);
 
         //address
-        addressCardView = (CardView) view.findViewById(R.id.addressCardView);
-        addressRecyclerView = (RecyclerView) view.findViewById(R.id.addressRecyclerView);
+        addressCardView = view.findViewById(R.id.addressCardView);
+        addressRecyclerView = view.findViewById(R.id.addressRecyclerView);
         addressLayoutManager = new LinearLayoutManager(getContext());
         addressRecyclerView.setLayoutManager(addressLayoutManager);
 
         //birthday
-        birthdayCardView = (CardView) view.findViewById(R.id.birthdayCardView);
-        birthdayTextView = (TextView) view.findViewById(R.id.birthdayTextView);
+        birthdayCardView = view.findViewById(R.id.birthdayCardView);
+        birthdayTextView = view.findViewById(R.id.birthdayTextView);
 
-        emptyPanel = (LinearLayout) view.findViewById(R.id.emptyPanel);
+        emptyPanel = view.findViewById(R.id.emptyPanel);
 
         return view;
     }
@@ -137,19 +139,19 @@ public class DetailsFragment extends Fragment implements LoaderManager.LoaderCal
 
         //phone & message
         getLoaderManager().initLoader(PHONE_LOADER_ID, bundle, this);
-        getLoaderManager().getLoader(PHONE_LOADER_ID).onContentChanged();
+        Objects.requireNonNull(getLoaderManager().getLoader(PHONE_LOADER_ID)).onContentChanged();
 
         //email
         getLoaderManager().initLoader(EMAIL_LOADER_ID, bundle, this);
-        getLoaderManager().getLoader(EMAIL_LOADER_ID).onContentChanged();
+        Objects.requireNonNull(getLoaderManager().getLoader(EMAIL_LOADER_ID)).onContentChanged();
 
         //address
         getLoaderManager().initLoader(ADDRESS_LOADER_ID, bundle, this);
-        getLoaderManager().getLoader(ADDRESS_LOADER_ID).onContentChanged();
+        Objects.requireNonNull(getLoaderManager().getLoader(ADDRESS_LOADER_ID)).onContentChanged();
 
         //birthday
         getLoaderManager().initLoader(BIRTHDAY_LOADER_ID, bundle, this);
-        getLoaderManager().getLoader(BIRTHDAY_LOADER_ID).onContentChanged();
+        Objects.requireNonNull(getLoaderManager().getLoader(BIRTHDAY_LOADER_ID)).onContentChanged();
     }
 
     ////////////////////////////////////////
@@ -160,8 +162,8 @@ public class DetailsFragment extends Fragment implements LoaderManager.LoaderCal
 
         if (sharedPreferences.getBoolean(SettingsActivity.KEY_PREF_SMS_MODE, true)) {
             //use quick message feature
-            if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(getActivity(),
+            if (ActivityCompat.checkSelfPermission(Objects.requireNonNull(getContext()), Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(Objects.requireNonNull(getActivity()),
                         new String[]{Manifest.permission.SEND_SMS},
                         PermissionRequestCode.SEND_SMS.getValue());
             } else {
@@ -177,22 +179,19 @@ public class DetailsFragment extends Fragment implements LoaderManager.LoaderCal
                 dialog.setContentView(R.layout.send_message_layout);
                 dialog.setTitle(R.string.send_message_title);
 
-                FloatingActionButton sendFab = (FloatingActionButton) dialog.findViewById(R.id.sendFab);
-                sendFab.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        String message = ((TextView) dialog.findViewById(R.id.messageTextView)).getText().toString();
+                FloatingActionButton sendFab = dialog.findViewById(R.id.sendFab);
+                sendFab.setOnClickListener(v -> {
+                    String message = ((TextView) dialog.findViewById(R.id.messageTextView)).getText().toString();
 
-                        if (message.length() == 0) return;
+                    if (message.length() == 0) return;
 
-                        try {
-                            SmsManager smsManager = SmsManager.getDefault();
-                            smsManager.sendTextMessage(phoneNumber, null, message, null, null);
-                            Toast.makeText(v.getContext(), R.string.send_message_success, Toast.LENGTH_LONG).show();
-                            dialog.dismiss();
-                        } catch (Exception e) {
-                            Toast.makeText(v.getContext(), R.string.send_message_failed, Toast.LENGTH_LONG).show();
-                        }
+                    try {
+                        SmsManager smsManager = SmsManager.getDefault();
+                        smsManager.sendTextMessage(phoneNumber, null, message, null, null);
+                        Toast.makeText(v.getContext(), R.string.send_message_success, Toast.LENGTH_LONG).show();
+                        dialog.dismiss();
+                    } catch (Exception e) {
+                        Toast.makeText(v.getContext(), R.string.send_message_failed, Toast.LENGTH_LONG).show();
                     }
                 });
 
@@ -224,7 +223,7 @@ public class DetailsFragment extends Fragment implements LoaderManager.LoaderCal
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         switch (id) {
             case PHONE_LOADER_ID:
-                return new CursorLoader(getContext(),
+                return new CursorLoader(Objects.requireNonNull(getContext()),
                         ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
                         null,
                         ContactsContract.CommonDataKinds.Phone.LOOKUP_KEY + "= ?",
@@ -232,7 +231,7 @@ public class DetailsFragment extends Fragment implements LoaderManager.LoaderCal
                         null);
 
             case EMAIL_LOADER_ID:
-                return new CursorLoader(getContext(),
+                return new CursorLoader(Objects.requireNonNull(getContext()),
                         ContactsContract.CommonDataKinds.Email.CONTENT_URI,
                         null,
                         ContactsContract.CommonDataKinds.Email.LOOKUP_KEY + "= ?",
@@ -240,7 +239,7 @@ public class DetailsFragment extends Fragment implements LoaderManager.LoaderCal
                         null);
 
             case ADDRESS_LOADER_ID:
-                return new CursorLoader(getContext(),
+                return new CursorLoader(Objects.requireNonNull(getContext()),
                         ContactsContract.CommonDataKinds.StructuredPostal.CONTENT_URI,
                         null,
                         ContactsContract.CommonDataKinds.StructuredPostal.LOOKUP_KEY + "= ?",
@@ -248,7 +247,7 @@ public class DetailsFragment extends Fragment implements LoaderManager.LoaderCal
                         null);
 
             case BIRTHDAY_LOADER_ID:
-                return new CursorLoader(getContext(),
+                return new CursorLoader(Objects.requireNonNull(getContext()),
                         ContactsContract.Data.CONTENT_URI,
                         null,
                         ContactsContract.Data.LOOKUP_KEY + "= ? AND " +
@@ -265,7 +264,7 @@ public class DetailsFragment extends Fragment implements LoaderManager.LoaderCal
     }
 
     @Override
-    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+    public void onLoadFinished(@NonNull Loader<Cursor> loader, Cursor data) {
         switch (loader.getId()) {
             case PHONE_LOADER_ID:
                 if (data.getCount() > 0) {
@@ -278,23 +277,15 @@ public class DetailsFragment extends Fragment implements LoaderManager.LoaderCal
                                 data.getString(data.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER)));
                     }
 
-                    messageButton.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            if (phoneList.size() == 1) {
-                                sendMessage(phoneList.get(0));
-                            } else {
-                                final String[] phoneArray = phoneList.toArray(new String[phoneList.size()]);
-                                AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
-                                builder.setTitle(R.string.pick_phone_number);
-                                builder.setItems(phoneArray, new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        sendMessage(phoneArray[which]);
-                                    }
-                                });
-                                builder.create().show();
-                            }
+                    messageButton.setOnClickListener(v -> {
+                        if (phoneList.size() == 1) {
+                            sendMessage(phoneList.get(0));
+                        } else {
+                            final String[] phoneArray = phoneList.toArray(new String[phoneList.size()]);
+                            AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
+                            builder.setTitle(R.string.pick_phone_number);
+                            builder.setItems(phoneArray, (dialog, which) -> sendMessage(phoneArray[which]));
+                            builder.create().show();
                         }
                     });
                     phone_messageCardView.setVisibility(View.VISIBLE);
@@ -346,7 +337,7 @@ public class DetailsFragment extends Fragment implements LoaderManager.LoaderCal
     }
 
     @Override
-    public void onLoaderReset(Loader<Cursor> loader) {
+    public void onLoaderReset(@NonNull Loader<Cursor> loader) {
 
     }
 
@@ -358,7 +349,7 @@ public class DetailsFragment extends Fragment implements LoaderManager.LoaderCal
 
         private final Paint mPaint;
 
-        public RecyclerViewSeparatorDecoration(Context context, int color, float heightDp) {
+        RecyclerViewSeparatorDecoration(Context context, int color, float heightDp) {
             mPaint = new Paint();
             mPaint.setColor(color);
             mPaint.setAlpha(80);
